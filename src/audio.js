@@ -58,25 +58,53 @@ export class AudioManager {
 
         // Playback logic for pause/resume
         const offset = this.pausedAt;
-        this.source.start(0, offset);
-        this.startTime = this.audioContext.currentTime - offset;
+        // Clamp offset to duration to prevent error
+        const safeOffset = Math.min(offset, this.audioBuffer.duration);
+
+        this.source.start(0, safeOffset);
+        this.startTime = this.audioContext.currentTime - safeOffset;
 
         this.isPlaying = true;
-
-        this.source.onended = () => {
-            // Simple check: only reset if we didn't manually stop it
-            // (handling "onended" correctly is tricky with pause, keeping it simple for now)
-            // this.isPlaying = false; 
-        };
     }
 
     pause() {
         if (!this.isPlaying || !this.source) return;
 
-        this.source.stop();
+        try {
+            this.source.stop();
+        } catch (e) { /* ignore if already stopped */ }
+
         this.pausedAt = this.audioContext.currentTime - this.startTime;
         this.isPlaying = false;
         this.source = null;
+    }
+
+    seek(time) {
+        if (!this.audioBuffer) return;
+
+        // Clamp time
+        time = Math.max(0, Math.min(time, this.audioBuffer.duration));
+
+        this.pausedAt = time;
+
+        if (this.isPlaying) {
+            this.source.stop();
+            this.source = null;
+            this.isPlaying = false;
+            this.play(); // Restart at new time
+        }
+    }
+
+    getCurrentTime() {
+        if (!this.audioBuffer) return 0;
+        if (this.isPlaying) {
+            return this.audioContext.currentTime - this.startTime;
+        }
+        return this.pausedAt;
+    }
+
+    getDuration() {
+        return this.audioBuffer ? this.audioBuffer.duration : 0;
     }
 
     getFrequencyData() {
