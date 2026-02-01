@@ -98,7 +98,8 @@ export class VisualizerScene {
 
         for (let j = 0; j < layers; j++) {
             // Further back = wider and flatter
-            const geometry = new THREE.PlaneGeometry(100 + j * 50, 40 + j * 20, 128, 4);
+            // Fix: Increased base width from 100 to 400 to prevent side gaps
+            const geometry = new THREE.PlaneGeometry(400 + j * 100, 40 + j * 20, 256, 4);
             const count = geometry.attributes.position.count;
             const positions = geometry.attributes.position;
 
