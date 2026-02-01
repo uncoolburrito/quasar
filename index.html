@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>quasar</title>
+</head>
+
+<body>
+  <div id="ui">
+    <h1>quasar</h1>
+    <div class="controls">
+      <label for="audio-upload" class="btn">Upload Song</label>
+      <input type="file" id="audio-upload" accept="audio/*" />
+      <button id="play-pause" class="btn" disabled>Play</button>
+    </div>
+    <p id="track-name">No track loaded</p>
+  </div>
+  <div id="vignette"></div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
