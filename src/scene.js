@@ -281,8 +281,18 @@ export class VisualizerScene {
         this.renderer.render(this.scene, this.camera);
     }
     onResize() {
-        this.camera.aspect = window.innerWidth / window.innerHeight;
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.setSize(width, height);
+
+        // Mobile adjustment: move camera back if aspect ratio is narrow (portrait)
+        if (this.camera.aspect < 1) {
+            this.camera.position.z = 20; // Move back to see more
+        } else {
+            this.camera.position.z = 10; // Default
+        }
     }
 }

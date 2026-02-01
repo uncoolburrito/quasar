@@ -52,21 +52,6 @@ function animate() {
 
   const audioData = audioManager.getEnergy();
   scene.update(audioData);
-
-  // Vignette Reactivity (Bass controls glow intensity and color hint)
-  if (vignette) {
-    const bass = audioData ? audioData.bass : 0;
-    const intensity = 50 + bass * 150; // 50px to 200px
-    const opacity = 0.2 + bass * 0.5;
-
-    // Dynamic color: dark blue normally, purple/pink on heavy bass
-    // We can use box-shadow color for this.
-    // Let's use RGB interpolation roughly or just HSL
-    // Hue: 240 (Blue) -> 300 (Pink)
-    const hue = 240 + bass * 60;
-
-    vignette.style.boxShadow = `inset 0 0 ${intensity}px ${intensity / 2}px hsla(${hue}, 80%, 50%, ${opacity})`;
-  }
 }
 
 init();
