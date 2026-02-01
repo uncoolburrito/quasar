@@ -4,8 +4,6 @@ import { AudioManager } from './audio.js';
 
 const scene = new VisualizerScene();
 const audioManager = new AudioManager();
-
-// UI Elements
 const uploadInput = document.getElementById('audio-upload');
 const playPauseBtn = document.getElementById('play-pause');
 const trackNameDisplay = document.getElementById('track-name');
@@ -40,13 +38,10 @@ function init() {
         trackNameDisplay.textContent = `Ready: ${file.name}`;
         playPauseBtn.disabled = false;
         playPauseBtn.textContent = 'Play';
-
-        // Progress Bar Setup
         if (progressBar) {
           progressBar.disabled = false;
           progressBar.max = duration;
 
-          // "Interesting Start" Logic: Start at 20%
           const startOffset = duration * 0.2;
           audioManager.seek(startOffset);
           progressBar.value = startOffset;
@@ -69,8 +64,6 @@ function init() {
       playPauseBtn.textContent = 'Pause';
     }
   });
-
-  // Progress Bar Listeners
   if (progressBar) {
     progressBar.addEventListener('input', () => {
       isDragging = true;
@@ -94,8 +87,6 @@ function animate() {
 
   const audioData = audioManager.getEnergy();
   scene.update(audioData);
-
-  // Update progress bar
   if (!isDragging && audioManager.isPlaying && progressBar) {
     const currentTime = audioManager.getCurrentTime();
     progressBar.value = currentTime;

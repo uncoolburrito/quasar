@@ -83,7 +83,7 @@ input[type="file"] {
   cursor: not-allowed;
 }
 
-/* Progress Bar Styles */
+
 .progress-wrapper {
   margin-top: 15px;
   width: 100%;
@@ -131,7 +131,7 @@ input[type="file"] {
   text-overflow: ellipsis;
 }
 
-/* Mobile Responsiveness */
+
 @media (max-width: 768px) {
   #ui {
     top: auto;
@@ -155,7 +155,7 @@ input[type="file"] {
 
   .btn {
     padding: 10px 20px;
-    /* Larger touch targets */
+    padding: 10px 20px;
     font-size: 1rem;
   }
 

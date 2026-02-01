@@ -9,8 +9,7 @@ export class AudioManager {
         this.startTime = 0;
         this.pausedAt = 0;
 
-        // Config
-        this.fftSize = 2048; // Higher resolution
+        this.fftSize = 2048;
         this.smoothingTimeConstant = 0.8;
     }
 
@@ -46,7 +45,6 @@ export class AudioManager {
         this.source = this.audioContext.createBufferSource();
         this.source.buffer = this.audioBuffer;
 
-        // Analyser Setup
         if (!this.analyser) {
             this.analyser = this.audioContext.createAnalyser();
             this.analyser.fftSize = this.fftSize;
@@ -56,9 +54,7 @@ export class AudioManager {
         this.source.connect(this.analyser);
         this.analyser.connect(this.audioContext.destination);
 
-        // Playback logic for pause/resume
         const offset = this.pausedAt;
-        // Clamp offset to duration to prevent error
         const safeOffset = Math.min(offset, this.audioBuffer.duration);
 
         this.source.start(0, safeOffset);
@@ -72,7 +68,7 @@ export class AudioManager {
 
         try {
             this.source.stop();
-        } catch (e) { /* ignore if already stopped */ }
+        } catch (e) { }
 
         this.pausedAt = this.audioContext.currentTime - this.startTime;
         this.isPlaying = false;
@@ -82,7 +78,6 @@ export class AudioManager {
     seek(time) {
         if (!this.audioBuffer) return;
 
-        // Clamp time
         time = Math.max(0, Math.min(time, this.audioBuffer.duration));
 
         this.pausedAt = time;
@@ -91,7 +86,7 @@ export class AudioManager {
             this.source.stop();
             this.source = null;
             this.isPlaying = false;
-            this.play(); // Restart at new time
+            this.play();
         }
     }
 
@@ -108,7 +103,7 @@ export class AudioManager {
     }
 
     getFrequencyData() {
-        if (!this.analyser) return new Uint8Array(this.fftSize / 2); // Return empty if not ready
+        if (!this.analyser) return new Uint8Array(this.fftSize / 2);
 
         const bufferLength = this.analyser.frequencyBinCount;
         const dataArray = new Uint8Array(bufferLength);
@@ -116,20 +111,12 @@ export class AudioManager {
         return dataArray;
     }
 
-    /**
-     * Returns normalized (0-1) energy for Low, Mid, High bands.
-     */
     getEnergy() {
         const data = this.getFrequencyData();
         if (!data || data.length === 0) return { bass: 0, mid: 0, high: 0 };
 
         const binCount = data.length;
-        // Simple band splitting (approximate for 44.1kHz)
-        // Bass: 20-250Hz -> roughly lower 5% (depending on FFT size)
-        // Mid: 250-2000Hz -> roughly 5%-40%
-        // High: 2000Hz+ -> roughly 40%-100%
 
-        // Helper to average a range
         const getAverage = (start, end) => {
             let sum = 0;
             const count = end - start;
@@ -137,7 +124,7 @@ export class AudioManager {
             for (let i = start; i < end; i++) {
                 sum += data[i];
             }
-            return (sum / count) / 255; // Normalize 0-1
+            return (sum / count) / 255;
         };
 
         const bassEnd = Math.floor(binCount * 0.05);
