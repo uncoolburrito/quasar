@@ -80,6 +80,13 @@ function init() {
       }
     });
   }
+
+  const modeSelect = document.getElementById('mode-select');
+  if (modeSelect) {
+    modeSelect.addEventListener('change', (e) => {
+      scene.setMode(e.target.value);
+    });
+  }
 }
 
 function animate() {
